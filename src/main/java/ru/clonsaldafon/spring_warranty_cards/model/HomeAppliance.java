@@ -16,17 +16,16 @@ public class HomeAppliance {
     @Column(name = "serial_number", unique = true, length = 100)
     private String serialNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(mappedBy = "homeAppliance", cascade = CascadeType.ALL, orphanRemoval = true)
     private WarrantyCard warrantyCard;
 
-    public HomeAppliance(String title, String serialNumber, User user) {
+    public HomeAppliance(String title, String serialNumber) {
         this.title = title;
         this.serialNumber = serialNumber;
-        this.user = user;
     }
 
     public HomeAppliance() {

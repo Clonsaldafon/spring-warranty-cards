@@ -22,13 +22,18 @@ public class User {
     @Column(name = "full_name", length = 100)
     private String fullName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<HomeAppliance> homeAppliances = new HashSet<>();
 
-    public User(String email, String password, String fullName) {
+    public User(String email, String password, String fullName, Role role) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.role = role;
     }
 
     public User() {
@@ -65,6 +70,10 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public Set<HomeAppliance> getHomeAppliances() {
