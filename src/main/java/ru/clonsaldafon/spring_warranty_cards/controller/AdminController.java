@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.CreateHomeApplianceDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.HomeApplianceDto;
+import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.UpdateHomeApplianceDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.service_center.CreateServiceCenterDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.service_center.ServiceCenterDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.user.UserDto;
@@ -97,10 +98,24 @@ public class AdminController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/home-appliances/warranty")
+    public List<HomeApplianceDto> getAllHomeAppliancesWithWarranties(@RequestParam Boolean isExpired) {
+        return homeApplianceService.findAllWithWarranties(isExpired).stream()
+                .map(homeApplianceMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     @PostMapping("/home-appliances")
     @ResponseStatus(HttpStatus.CREATED)
     public HomeApplianceDto createHomeAppliance(@Valid @RequestBody CreateHomeApplianceDto createHomeApplianceDto) {
         HomeAppliance homeAppliance = homeApplianceService.create(createHomeApplianceDto);
+        return homeApplianceMapper.toDto(homeAppliance);
+    }
+
+    @PutMapping("/home-appliances/{id}")
+    public HomeApplianceDto updateHomeAppliance(@PathVariable Long id,
+                                                @Valid @RequestBody UpdateHomeApplianceDto updateHomeApplianceDto) {
+        HomeAppliance homeAppliance = homeApplianceService.updateById(id, updateHomeApplianceDto);
         return homeApplianceMapper.toDto(homeAppliance);
     }
 

@@ -2,9 +2,11 @@ package ru.clonsaldafon.spring_warranty_cards.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.CreateHomeApplianceDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.HomeApplianceDto;
+import ru.clonsaldafon.spring_warranty_cards.dto.home_appliance.UpdateHomeApplianceDto;
 import ru.clonsaldafon.spring_warranty_cards.model.HomeAppliance;
 
 @Mapper(componentModel = "spring",
@@ -19,4 +21,8 @@ public interface HomeApplianceMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "warrantyCard", ignore = true)
     HomeAppliance toEntity(CreateHomeApplianceDto createHomeApplianceDto);
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "warrantyCard", ignore = true)
+    void updateEntityFromDto(UpdateHomeApplianceDto updateHomeApplianceDto, @MappingTarget HomeAppliance homeAppliance);
 }
