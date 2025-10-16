@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Техника</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="components/admin_header :: header"></div>
+
+        <div class="container">
+            <h2 class="mb-4">Техника</h2>
+
+            <a href="/admin/home-appliances/create" class="btn btn-success mb-3">Добавить технику</a>
+
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Серийный номер</th>
+                        <th>ID владельца</th>
+                        <th>Email владельца</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="appliance : ${homeAppliances}">
+                        <td th:text="${appliance.id}"></td>
+                        <td th:text="${appliance.title}"></td>
+                        <td th:text="${appliance.serialNumber}"></td>
+                        <td th:text="${appliance.userId}"></td>
+                        <td th:text="${appliance.userEmail}"></td>
+                        <td>
+                            <a th:href="'/admin/home-appliances/edit/' + ${appliance.id}"
+                               class="btn btn-sm btn-warning">
+                                Изменить
+                            </a>
+                            <form th:action="'/admin/home-appliances/delete/' + ${appliance.id}"
+                                  method="post" class="d-inline">
+                                <button class="btn btn-sm btn-danger">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

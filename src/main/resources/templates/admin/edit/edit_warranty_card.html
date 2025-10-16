@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Редактировать гарантийный талон</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light">
+        <div class="container mt-5">
+            <h2 class="mb-4">Редактировать гарантийный талон</h2>
+            <form th:action="@{'/admin/warranty-cards/edit/' + ${warrantyCard.id}}" method="post">
+                <input type="hidden" name="_method" value="put"/>
+
+                <div class="mb-3">
+                    <label class="form-label">Дата окончания гарантии</label>
+                    <input type="datetime-local" class="form-control" name="endedAt"
+                           th:value="${warrantyCard.endedAt}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">ID сервисного центра</label>
+                    <input type="number" class="form-control" name="serviceCenterId"
+                           th:value="${warrantyCard.serviceCenterId}" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a th:href="@{/admin/warranty-cards}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </body>
+</html>

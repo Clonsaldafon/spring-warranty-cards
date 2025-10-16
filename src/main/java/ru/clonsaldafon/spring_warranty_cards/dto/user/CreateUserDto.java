@@ -21,6 +21,10 @@ public class CreateUserDto {
         this.fullName = fullName;
     }
 
+    public CreateUserDto() {
+
+    }
+
     public String getEmail() {
         return email;
     }

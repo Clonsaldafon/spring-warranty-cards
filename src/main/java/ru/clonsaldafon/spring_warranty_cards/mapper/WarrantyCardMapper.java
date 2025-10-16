@@ -7,6 +7,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.clonsaldafon.spring_warranty_cards.dto.warranty_card.CreateWarrantyCardDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.warranty_card.UpdateWarrantyCardDto;
 import ru.clonsaldafon.spring_warranty_cards.dto.warranty_card.WarrantyCardDto;
+import ru.clonsaldafon.spring_warranty_cards.dto.warranty_card.WarrantyCardViewDto;
 import ru.clonsaldafon.spring_warranty_cards.model.WarrantyCard;
 
 @Mapper(componentModel = "spring",
@@ -25,4 +26,10 @@ public interface WarrantyCardMapper {
     @Mapping(target = "homeAppliance", ignore = true)
     @Mapping(target = "serviceCenter", ignore = true)
     void updateEntityFromDto(UpdateWarrantyCardDto updateWarrantyCardDto, @MappingTarget WarrantyCard warrantyCard);
+
+    @Mapping(target = "homeApplianceId", source = "homeAppliance.id")
+    @Mapping(target = "homeApplianceTitle", source = "homeAppliance.title")
+    @Mapping(target = "homeApplianceSerialNumber", source = "homeAppliance.serialNumber")
+    @Mapping(target = "serviceCenterTitle", source = "serviceCenter.title")
+    WarrantyCardViewDto toViewDto(WarrantyCard warrantyCard);
 }

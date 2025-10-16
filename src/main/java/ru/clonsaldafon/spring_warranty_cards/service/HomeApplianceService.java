@@ -31,11 +31,20 @@ public class HomeApplianceService {
     @Autowired
     private WarrantyCardRepository warrantyCardRepository;
 
+    public HomeAppliance findById(Long id) {
+        return homeApplianceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Home appliance not found with id: " + id));
+    }
+
     public List<HomeAppliance> findAll() {
         return homeApplianceRepository.findAll();
     }
 
     public List<HomeAppliance> findAllByUserId(Long userId) {
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
         return homeApplianceRepository.findAllByUserId(userId);
     }
 
@@ -52,11 +61,23 @@ public class HomeApplianceService {
     }
 
     public List<HomeAppliance> findAllWithWarrantiesByUser(boolean isExpired, Long userId) {
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
         if (isExpired) {
             return homeApplianceRepository.findAllWithExpiredWarrantyByUserId(userId, LocalDateTime.now());
         }
 
         return homeApplianceRepository.findAllWithActiveWarrantyByUserId(userId, LocalDateTime.now());
+    }
+
+    public List<HomeAppliance> findAllWithoutWarrantiesByUser(Long userId) {
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
+        return homeApplianceRepository.findAllWithoutWarrantyByUserId(userId);
     }
 
     public HomeAppliance create(CreateHomeApplianceDto createHomeApplianceDto) {
@@ -110,5 +131,13 @@ public class HomeApplianceService {
         }
 
         return homeApplianceRepository.save(homeAppliance);
+    }
+
+    public void deleteById(Long id) {
+        if (homeApplianceRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Home appliance not found with id: " + id);
+        }
+
+        homeApplianceRepository.deleteById(id);
     }
 }

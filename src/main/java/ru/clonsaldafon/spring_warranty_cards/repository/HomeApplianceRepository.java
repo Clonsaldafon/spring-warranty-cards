@@ -40,4 +40,11 @@ public interface HomeApplianceRepository extends JpaRepository<HomeAppliance, Lo
     """)
     List<HomeAppliance> findAllWithExpiredWarrantyByUserId(@Param("userId") Long userId,
                                                            @Param("now") LocalDateTime now);
+
+    @Query("""
+        SELECT h FROM HomeAppliance h 
+        WHERE h.user.id = :userId 
+          AND h.warrantyCard IS NULL
+    """)
+    List<HomeAppliance> findAllWithoutWarrantyByUserId(@Param("userId") Long userId);
 }

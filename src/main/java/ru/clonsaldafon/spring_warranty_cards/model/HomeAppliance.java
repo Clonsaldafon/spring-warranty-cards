@@ -20,7 +20,7 @@ public class HomeAppliance {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "homeAppliance", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "homeAppliance", cascade = CascadeType.ALL)
     private WarrantyCard warrantyCard;
 
     public HomeAppliance(String title, String serialNumber) {

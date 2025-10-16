@@ -3,17 +3,16 @@ package ru.clonsaldafon.spring_warranty_cards.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ru.clonsaldafon.spring_warranty_cards.dto.user.CreateUserDto;
-import ru.clonsaldafon.spring_warranty_cards.dto.user.UserDto;
 import ru.clonsaldafon.spring_warranty_cards.mapper.UserMapper;
 import ru.clonsaldafon.spring_warranty_cards.model.User;
 import ru.clonsaldafon.spring_warranty_cards.service.UserService;
 
-@RestController
+@Controller
 public class AuthController {
 
     @Autowired
@@ -22,10 +21,25 @@ public class AuthController {
     @Autowired
     private UserMapper userMapper;
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "auth/login";
+    }
+
+    @GetMapping("/register")
+    public String registerPage(Model model) {
+        model.addAttribute("createUserDto", new CreateUserDto());
+        return "auth/register";
+    }
+
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto register(@Valid @RequestBody CreateUserDto createUserDto) {
+    public String register(@ModelAttribute("createUserDto") @Valid CreateUserDto createUserDto,
+                            BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
+
         User user = userService.register(createUserDto);
-        return userMapper.toDto(user);
+        return "redirect:/auth/login";
     }
 }

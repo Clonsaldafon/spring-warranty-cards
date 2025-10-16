@@ -66,26 +66,12 @@ public class AdminController {
         return userMapper.toDto(user);
     }
 
-    @GetMapping("/users/{email}")
-    public UserDto getUserByEmail(@PathVariable String email) {
-        User user = userService.findByEmail(email);
-        return userMapper.toDto(user);
-    }
-
     @DeleteMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
-    @DeleteMapping("/users/{email}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserByEmail(@PathVariable String email) {
-        userService.deleteByEmail(email);
-    }
-
     @PostMapping("/service-centers")
-    @ResponseStatus(HttpStatus.CREATED)
     public ServiceCenterDto createServiceCenter(@Valid @RequestBody CreateServiceCenterDto createServiceCenterDto) {
         ServiceCenter serviceCenter = serviceCenterService.create(createServiceCenterDto);
         return serviceCenterMapper.toDto(serviceCenter);
@@ -106,7 +92,6 @@ public class AdminController {
     }
 
     @PostMapping("/home-appliances")
-    @ResponseStatus(HttpStatus.CREATED)
     public HomeApplianceDto createHomeAppliance(@Valid @RequestBody CreateHomeApplianceDto createHomeApplianceDto) {
         HomeAppliance homeAppliance = homeApplianceService.create(createHomeApplianceDto);
         return homeApplianceMapper.toDto(homeAppliance);
@@ -127,7 +112,6 @@ public class AdminController {
     }
 
     @PostMapping("/warranty-cards")
-    @ResponseStatus(HttpStatus.CREATED)
     public WarrantyCardDto createWarrantyCard(@Valid @RequestBody CreateWarrantyCardDto createWarrantyCardDto) {
         WarrantyCard warrantyCard = warrantyCardService.create(createWarrantyCardDto);
         return warrantyCardMapper.toDto(warrantyCard);
@@ -141,7 +125,6 @@ public class AdminController {
     }
 
     @DeleteMapping("/warranty-cards/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWarrantyCardById(@PathVariable Long id) {
         warrantyCardService.deleteById(id);
     }

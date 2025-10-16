@@ -30,8 +30,25 @@ public class WarrantyCardService {
     @Autowired
     private ServiceCenterRepository serviceCenterRepository;
 
+    public WarrantyCard findById(Long id) {
+        return warrantyCardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Warranty card not found with id: " + id));
+    }
+
     public List<WarrantyCard> findAll() {
         return warrantyCardRepository.findAll();
+    }
+
+    public List<WarrantyCard> findAllByWarranty(boolean isExpired) {
+        if (isExpired) {
+            return warrantyCardRepository.findAllWithExpiredWarranty(LocalDateTime.now());
+        }
+
+        return warrantyCardRepository.findAllWithActiveWarranty(LocalDateTime.now());
+    }
+
+    public List<WarrantyCard> findAllByUserId(Long id) {
+        return warrantyCardRepository.findAllByUserId(id);
     }
 
     public WarrantyCard create(CreateWarrantyCardDto createWarrantyCardDto) {
@@ -81,9 +98,11 @@ public class WarrantyCardService {
     }
 
     public void deleteById(Long id) {
-        if (warrantyCardRepository.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("Warranty card not found with id: " + id);
-        }
+        WarrantyCard warrantyCard = warrantyCardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Warranty card not found with id: " + id));
+
+        HomeAppliance homeAppliance = warrantyCard.getHomeAppliance();
+        homeAppliance.setWarrantyCard(null);
 
         warrantyCardRepository.deleteById(id);
     }
