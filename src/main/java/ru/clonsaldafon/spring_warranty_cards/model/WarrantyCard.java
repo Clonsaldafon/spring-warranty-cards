@@ -18,6 +18,9 @@ public class WarrantyCard {
     @Column(name = "ended_at", nullable = false)
     private LocalDateTime endedAt;
 
+    @Column(name = "notified")
+    private Boolean notified = false;
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "home_appliance_id", nullable = false)
     private HomeAppliance homeAppliance;
@@ -60,6 +63,14 @@ public class WarrantyCard {
 
     public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
+    }
+
+    public Boolean getNotified() {
+        return notified;
+    }
+
+    public void setNotified(Boolean notified) {
+        this.notified = notified;
     }
 
     public HomeAppliance getHomeAppliance() {

@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if (roles.contains("ROLE_USER")) {
             response.sendRedirect("/home-appliances");
         } else {
-            response.sendRedirect("/"); // fallback
+            response.sendRedirect("/");
         }
     }
 }

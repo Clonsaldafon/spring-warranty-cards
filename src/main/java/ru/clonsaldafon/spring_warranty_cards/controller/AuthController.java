@@ -1,8 +1,15 @@
 package ru.clonsaldafon.spring_warranty_cards.controller;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.clonsaldafon.spring_warranty_cards.dto.user.CreateUserDto;
 import ru.clonsaldafon.spring_warranty_cards.mapper.UserMapper;
 import ru.clonsaldafon.spring_warranty_cards.model.User;
+import ru.clonsaldafon.spring_warranty_cards.security.CustomAuthenticationSuccessHandler;
 import ru.clonsaldafon.spring_warranty_cards.service.UserService;
+
+import java.io.IOException;
 
 @Controller
 public class AuthController {
@@ -20,6 +30,12 @@ public class AuthController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler successHandler;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -33,13 +49,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("createUserDto") @Valid CreateUserDto createUserDto,
-                            BindingResult bindingResult, Model model) {
+    public void register(@ModelAttribute @Valid CreateUserDto createUserDto, BindingResult bindingResult,
+                         HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         if (bindingResult.hasErrors()) {
-            return "auth/register";
+            request.getRequestDispatcher("/auth/register").forward(request, response);
+            return;
         }
 
         User user = userService.register(createUserDto);
-        return "redirect:/auth/login";
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        createUserDto.getEmail(),
+                        createUserDto.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        successHandler.onAuthenticationSuccess(request, response, authentication);
     }
 }

@@ -51,6 +51,10 @@ public class WarrantyCardService {
         return warrantyCardRepository.findAllByUserId(id);
     }
 
+    public List<WarrantyCard> findExpiringIn30Days(LocalDateTime in30Days) {
+        return warrantyCardRepository.findExpiringIn30Days(LocalDateTime.now(), in30Days);
+    }
+
     public WarrantyCard create(CreateWarrantyCardDto createWarrantyCardDto) {
         HomeAppliance homeAppliance = homeApplianceRepository.findById(createWarrantyCardDto.getHomeApplianceId())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -70,6 +74,10 @@ public class WarrantyCardService {
         );
 
         return warrantyCardRepository.save(warrantyCard);
+    }
+
+    public void save(WarrantyCard warrantyCard) {
+        warrantyCardRepository.save(warrantyCard);
     }
 
     public WarrantyCard updateById(Long id, UpdateWarrantyCardDto updateWarrantyCardDto) {

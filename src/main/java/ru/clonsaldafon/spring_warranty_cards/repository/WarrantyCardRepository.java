@@ -23,4 +23,13 @@ public interface WarrantyCardRepository extends JpaRepository<WarrantyCard, Long
 
     @Query("SELECT w FROM WarrantyCard w WHERE w.endedAt <= :now")
     List<WarrantyCard> findAllWithExpiredWarranty(@Param("now") LocalDateTime now);
+
+    @Query("""
+        SELECT w FROM WarrantyCard w
+        JOIN FETCH w.homeAppliance ha
+        JOIN FETCH ha.user
+        WHERE w.endedAt BETWEEN :now AND :in30Days AND w.notified = false
+    """)
+    List<WarrantyCard> findExpiringIn30Days(@Param("now") LocalDateTime now,
+                                            @Param("in30Days") LocalDateTime in30Days);
 }
