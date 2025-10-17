@@ -55,6 +55,11 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .successHandler(successHandler)
                 )
+                .rememberMe(remember -> remember
+                        .key("remember-me-key-fH95YeLUS3WTn8Gj")
+                        .tokenValiditySeconds(60 * 60 * 24 * 30)
+                        .alwaysRemember(true)
+                )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .invalidateHttpSession(true)
