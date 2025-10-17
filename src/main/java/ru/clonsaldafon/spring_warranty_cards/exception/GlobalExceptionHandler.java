@@ -1,5 +1,7 @@
 package ru.clonsaldafon.spring_warranty_cards.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,9 +17,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
-        // TODO: logging
+        logger.error("Resource not found: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage(),
@@ -34,6 +39,8 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
 
+        logger.error("Validation failed: {}", errors);
+
         ErrorResponse error = new ErrorResponse(
                 "Validation error",
                 String.join("; ", errors),
@@ -44,7 +51,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(AuthenticationCredentialsNotFoundException ex) {
-        // TODO: logging
+        logger.error("Unauthorized access: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
                 "Authentication is required",
@@ -55,7 +63,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(AccessDeniedException ex) {
-        // TODO: logging
+        logger.error("Access denied: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.FORBIDDEN.getReasonPhrase(),
                 "Access denied",
@@ -68,7 +77,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex) {
         String message = String.format("The method '%s' is not supported for this resource", ex.getMessage());
 
-        // TODO: logging
+        logger.error("Method not allowed: {}", message);
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
                 message,
@@ -79,7 +89,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleConflict(DuplicateResourceException ex) {
-        // TODO: logging
+        logger.error("Duplicate resource: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 "Resource conflict",
@@ -90,7 +101,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        // TODO: logging
+        logger.error("Illegal argument: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 ex.getMessage(),
@@ -101,7 +113,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception ex) {
-        // TODO: logging
+        logger.error("Unexpected server error", ex);
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "An unexpected error has occurred. Contact support",
